@@ -12,6 +12,693 @@ html
     article
 
       section
-        h1 Tools for the 21st Century Musician
+        h1 Tools for the<br/>21st Century Musician
+
+      section
+        h3.bullet Let’s start with a supposition:
+        h2.bullet You all are artists
+        h1.bullet and very edgy!
+
+      section
+        h3.bullet So you want to break fronteers;
+        h2.bullet go where no one has been before:
+        h1.bullet bring your art<br />to the web!
+
+      section
+        h3.bullet Of course,
+        h1.bullet with <tt>&lt;audio&gt;</tt>
+          span.bullet , eh?
+
+
+      section
+        h2.bullet We <em>could</em> use it...
+        pre.bullet
+          code.language-markup.
+            &lt;audio src="cool_song.ogg" controls preload&gt;&lt/audio&gt;
+            
+        h3.bullet This would...
+        ul
+          li initiate a network request for loading
+          li deal with decoding/streaming/buffering
+          li render audio controls
+          li display progress indicator, time...
+
+      section
+        h3.bullet It also exposes methods
+        ul
+          li load
+          li play
+          li pause
+
+
+      section
+        h3.bullet And can also dispatch events
+        ul
+          li loadeddata
+          li error
+          li ended
+          li ...
+
+      
+      section
+        h2.bullet But it has shortcomings
+        ul
+          li no accurate scheduling
+          li hacks for triggering multiple instances
+          li they're associated to a DOM element
+          li output goes straight to the speakers
+          li no fancy visualisations
+          li some OS display a fullscreen player
+
+      section
+        h1 This won’t do for edgy artists
+
+      section
+        h3.bullet Is it all over?
+        h2.bullet Do we just give up and<br />start writing native apps?
+        h1.bullet NO.
+
+
+      section
+        h1 Web Audio<br />to the rescue!
+
+
+      section
+        h2.bullet Web Audio
+        h3.bullet ~ accurately place sounds in space and time ~
+        ul
+          li fully controllable with a JS API
+          li interoperable with other Web APIs
+          li not attached to the DOM
+          li runs in a separate thread
+          li supported everywhere <a href="https://connect.microsoft.com/IE/feedback/details/793720/ie11-feature-request-support-for-web-audio-api">except IE</a>
+
+      section
+        h3.bullet So how does it work?
+
+      section
+        h2.bullet 1) create an audio context
+        pre.bullet
+          code.language-javascript.
+            var audioContext = new AudioContext();
+        h3.bullet “Where everything happens”
+
+      section
+        h2.bullet 2) use instance methods to<br />create audio nodes
+        pre.bullet
+          code.language-javascript.
+            var oscillator = audioContext.createOscillator();
+
+      section
+        h2.bullet 3) connect nodes<br />to build the audio graph
+        pre.bullet
+          code.language-javascript.
+            oscillator.connect(audioContext.destination);
+
+      section
+        h3 The audio graph
+        img(src='images/modular-routing.png', alt='modular routing in web audio')
+
+      section
+        h2.bullet 4) control nodes with their JS API
+        pre.bullet
+          code.language-javascript.
+            oscillator.start();
+
+      section
+        h2.bullet All together
+        pre
+          code.language-javascript.
+            var audioContext = new AudioContext();
+            var oscillator = audioContext.createOscillator();
+            oscillator.connect(audioContext.destination);
+            oscillator.start(audioContext.currentTime);
+        p <a href="examples/live_oscillator/">demo→</a>
+
+      section
+        h3 A taxonomy of nodes
+        ul
+          li audio emission
+          li audio manipulation
+          li audio analysis
+
+
+      section
+        h2.bullet Starting/stopping
+        pre
+          code.language-javascript.
+            // start it now
+            oscillator.start(audioContext.currentTime);
+
+            // 3 seconds from now
+            oscillator.start(audioContext.currentTime + 3)
+
+            // stop it now
+            oscillator.stop(audioContext.currentTime);
+            
+            // start it again
+            oscillator.start(audioContext.currentTime); // !?!
+
+      section
+        h3.bullet Why can’t oscillators be restarted?
+        h2.bullet Welcome to your first Web Audio...
+        h1.bullet GOTCHA!
+
+
+      section
+        h2.bullet Because of performance reasons
+        h3.bullet One-use only nodes
+        ul
+            li use and forget
+            li automatically disposed of by the GC
+            li as long as you don't keep <a href="http://webaudio.github.io/web-audio-api/#lifetime-1">references</a>
+            li watch out for those memory leaks!
+            li the Web Audio Editor is super helpful
+        p.bullet <a href="examples/live_leaky_oscillators/">demo→</a>
+
+
+      section
+        h1 Write your own wrappers
+
+
+      section
+        h2.bullet Oscillator.js (1/3)
+        pre
+          code.language-javascript.
+            function Oscillator(context) {
+              var node = null;
+              var nodeNeedsNulling = false;
+
+              this.start = function(when) {
+                ensureNodeIsLive();
+                node.start(when);
+              };
+
+      section
+        h2.bullet Oscillator.js (2/3)
+        pre
+          code.language-javascript.
+            // continues
+            this.stop = function(when) {
+              if(node === null) {
+                return;
+              }
+              nodeNeedsNulling = true;
+              node.stop(when);
+            };
+
+      section
+        h2.bullet Oscillator.js (3/3)
+        pre
+          code.language-javascript.
+            // continues
+              function ensureNodeIsLive() {
+                if(nodeNeedsNulling || node === null) {
+                  node = context.createOscillator();
+                }
+                nodeNeedsNulling = false;
+              }
+            }
+
+
+      section
+        h2.bullet Using it
+        pre
+          code.language-javascript.
+            var ctx = new AudioContext();
+            var osc = new Oscillator(ctx);
+
+            function restart() {
+              osc.stop(0);
+              osc.start(0);
+            }
+
+            osc.start(0);
+
+            setTimeout(restart, 1000);
+
+      section
+        h2 Self regenerating oscillator
+        iframe(src='examples/regenerate_oscillator')
+
+      section
+        h3.bullet But before I continue...
+        h2.bullet It would be nice to <em>see</em> what is going on!
+
+      section
+        h2.bullet Let’s use an
+        h1.bullet <tt>AnalyserNode</tt>
+
+      section
+        h2 <tt>AnalyserNode</tt>, 1
+        pre.bullet
+          code.language-javascript.
+            var analyser = context.createAnalyser();
+            analyser.fftSize = 2048;
+            var analyserData = new Float32Array(
+              analyser.frequencyBinCount
+            );
+
+            oscillator.connect(analyser);
+
+      section
+        h2 <tt>AnalyserNode</tt>, 2
+        pre.bullet
+          code.language-javascript.
+            requestAnimationFrame(animate);
+
+            function animate() {
+              analyser.getFloatTimeDomainData(analyserData);
+              drawSample(canvas, analyserData);
+            }
+
+      section
+        h1 Analyser
+        iframe(src='examples/regenerate_oscillator_analysed')
+
+
+      section
+        h1.bullet Now,
+        h2.bullet can we play something other than that beep?
+        h3.bullet Yes!
+
+
+      section
+        h3.bullet Nodes have properties we can change, e.g.<br/><tt>oscillator.type</tt>
+        ul
+          li sine
+          li square
+          li sawtooth
+          li triangle
+          li custom
+
+        pre.bullet
+          code.language-javascript.
+            oscillator.type = 'square';
+
+      section
+        h1 Wave types
+        iframe(src='examples/oscillator_wave_type')
+
+
+      section
+        h3.bullet <tt>oscillator.frequency</tt>
+        h2.bullet Naive attempt:
+        pre.bullet
+          code.language-javascript.
+            oscillator.frequency = 880;
+        h1.bullet It doesn’t work!<span class="bullet">😬</span>
+
+
+      section
+        h3.bullet <tt>oscillator.frequency</tt><br/>is an <tt>AudioParam</tt>
+        h2.bullet It is <em>special</em>
+        pre.bullet
+          code.language-javascript.
+            // Access it with
+            oscillator.frequency.value = 880;
+        p.bullet <a href="examples/live_oscillator_freqchange/">demo→</a>
+
+      section
+        h2.bullet So what is the point of <tt>AudioParam</tt>?
+        h1.bullet Superpowers.
+
+      section
+        h1.bullet Superpower #1
+        h2.bullet Scheduling changes with accurate timing
+
+      section
+        h1.bullet What NOT to do
+        ul
+          li setInterval
+          li setTimeout
+
+      section
+        h1 Stepped sounds
+        iframe(src='examples/step_sounds')
+
+
+      section
+        h2.bullet <tt>AudioParam</tt> approach
+        h3.bullet Web Audio keeps a list of timed events <strong>per parameter</strong>
+        ul
+          li <tt>setValueAtTime</tt>
+          li <tt>linearRampToValueAtTime</tt>
+          li <tt>exponentialRampToValueAtTime</tt>
+          li <tt>setTargetAtTime</tt>
+          li <tt>setValueCurveAtTime</tt>
+
+
+      section
+        h3.bullet Go from 440 to 880 Hz in 3 seconds
+        pre.bullet
+          code.language-javascript.
+            osc.frequency.setValueAtTime(
+              440,
+              audioContext.currentTime
+            );
+            osc.frequency.linearRampToValueAtTime(
+              880,
+              audioContext.currentTime + 3
+            );
+        p.bullet <a href="examples/live_oscillator_freqchange_nicer/">demo→</a>
+
+
+      section
+        h1.bullet Minigotchas
+        ul
+          li avoid using <tt>param.value</tt> <span class="bullet">--it doesn’t add an event to the list</span>
+          li avoid using <tt>0</tt> as <tt>when</tt><span class="bullet">--times have to be ascending</span>
+
+      section
+        h3.bullet Let’s build an ADSR envelope
+        img(src='./examples/_data/adsr.png', class='bullet', style='height: 80%; width=auto')
+
+
+      section
+        h1.bullet <em>ADSwhat...?</em>
+        ul
+          li Attack Decay Sustain Release
+          li Used a lot in substractive synthesis
+          li Relatively easy to configure and compute
+
+      section
+        div.singleimage
+          img(src='img/subtractor.jpg', alt='subtractor')
+
+
+      section
+        div.singleimage
+          img(src='img/malstrom.jpg', alt='malstrom')
+
+
+      section
+        h3.bullet We need a new node for controlling the volume
+        h1.bullet <tt>GainNode</tt>
+
+        pre.bullet
+          code.language-javascript.
+            var ctx = new AudioContext();
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain(); // *** NEW
+
+            osc.connect(gain); // *** NEW
+            gain.connect(ctx.destination); // *** NEW
+
+      section
+        h2 ADSR part 1
+        pre.bullet
+          code.language-javascript.
+            // Attack/Decay/Sustain phase
+            gain.gain.setValueAtTime(
+              0,
+              audioContext.currentTime
+            );
+            gain.gain.linearRampToValueAtTime(
+              1,
+              audioContext.currentTime + attackLength
+            );
+            gain.gain.linearRampToValueAtTime(
+              sustainValue,
+              audioContext.currentTime + attackLength + decayLength
+            );
+            
+
+      section
+        h2 ADSR part 2
+        pre.bullet
+          code.language-javascript.
+            // Release phase
+            gain.gain.linearRampToValueAtTime(
+              0,
+              audioContext.currentTime + releaseLength
+            );
+
+
+      section
+        h1 Envelopes
+        iframe(src='examples/envelopes')
+
+
+      section
+        h2 Cancelling events!
+
+        pre.bullet
+          code.language-javascript.
+            osc.frequency.cancelScheduledEvents(
+              audioContext.currentTime
+            );
+
+
+      section
+        h1.bullet Superpower #2
+        h2.bullet Modulation
+        h3.bullet Connect the output of one node to another node’s AudioParam
+
+
+      section
+        h1 LFOs
+        img(src='./examples/_data/lfo.png', class='bullet', style='width: 80%; height: auto;')
+
+
+      section
+        h1 LFOs
+        h2.bullet We can’t hear those frequencies...
+        h3.bullet but can use them to alter other values we <em>can</em> notice!
+
+      section
+        h1 SPOOKY SOUNDS
+
+
+      section
+        h2.bullet Watch out!
+
+        pre.bullet
+          code.language-javascript.
+            var context = new AudioContext();
+            var osc = context.createOscillator();
+            var lfOsc = context.createOscillator();
+
+            var gain = context.createGain();
+            lfOsc.connect(gain);
+            
+            // The output from gain is the [-1, 1] range
+            gain.gain.value = 100;
+            // now the output from gain is in the [-100, 100] range!
+            
+            gain.connect(osc.frequency); // NOT the destination
+
+
+      section
+        h2.bullet KEEP watching out
+
+        pre.bullet
+          code.language-javascript.
+            osc.frequency.value = 440;
+
+            // oscillation frequency is 1Hz = once per second
+            lfOsc.frequency.value = 1;
+            
+            osc.start();
+            lfOsc.start();
+                       
+      section
+        h1 spooky LFOs
+        iframe(src='examples/spooky_lfos')
+
+
+      section
+        h1.bullet Playing existing samples
+        ul
+          li <tt>AudioBufferSourceNode</tt> for short samples (&lt; 1 min)
+          li <tt>MediaElementAudioSourceNode</tt> for longer sounds
+
+
+      section
+        h3.bullet <tt>AudioBufferSourceNode</tt>, 1
+        pre
+          code.language-javascript.
+            var context = new AudioContext();
+            var pewSource = context.createBufferSource();
+            var request = new XMLHttpRequest();
+            request.open('GET', samplePath, true);
+            request.responseType = 'arraybuffer'; // we want binary data 'as is'
+            request.onload = function() {
+              context.decodeAudioData(
+                request.response,
+                loadedCallback, errorCallback
+              );
+            };
+
+      section
+        h3.bullet <tt>AudioBufferSourceNode</tt>, 2
+        pre
+          code.language-javascript.
+            var abs = context.createBufferSource();
+
+            function loadedCallback(bufferSource) {
+              abs.buffer = bufferSource;
+              abs.start();
+            }
+
+            function errorCallback() {
+              alert('No PEW PEW for you');
+            }
+
+
+      section
+        h3.bullet <tt>AudioBufferSourceNode</tt>, 3
+        p.bullet Just like oscillators!
+        pre.bullet
+          code.language-javascript.
+            abs.start(when);
+            abs.stop(when);
+
+        p.bullet <tt>AudioBufferSourceNode</tt> even die like oscillators!
+
+      section
+        h2 Pssst:
+        h3.bullet You can create them again and reuse the <tt>buffer</tt>
+
+      
+      section
+        h1 pewpewmatic
+        iframe(src='examples/pewpewmatic')
+
+      section
+        h3.bullet <tt>MediaElementAudioSourceNode</tt>
+        p.bullet Takes the output of <tt>&lt;audio&gt;</tt> or <tt>&lt;video&gt;</tt> and incorporates them into the graph.
+        pre.bullet
+          code.language-javascript.
+            var video = document.querySelector('video');
+            var audioSourceNode = 
+              context.createMediaElementAudioSource(
+                video
+              );
+            audioSourceNode.connect(context.destination);
+
+
+      section
+        h1 Media element
+        iframe(src='examples/mediaelement')
+        p <a href="examples/mediaelement/">demo→</a>
+
+
+
+      section
+        h2.bullet More Web Audio nodes
+        ul
+          li delay
+          li filter (low/pass/high frequencies)
+          li panning (3D sounds!)
+          li reverb (via convolver)
+          li splitter
+          li waveshaper
+          li compressor
+        p.bullet Their parameters can also be modulated and automated!
+
+
+      section
+        div.singleimage
+          img(src='img/audiocontext-interface.png', alt='audiocontext interface', style='width: 80%; height: auto')
+
+      section
+        h1.bullet Wait, there is more!
+        h2.bullet Mix all the APIs!
+        ul
+          li Using getUserMedia + MediaElementAudioSourceNode
+          li Web Audio Workers - generate audio in realtime with JavaScript
+          li OfflineAudioContext - render as fast as possible! Beat detection, etc...
+          li ???
+          li BE EDGY!
+
+
+      section
+        h1 And there is<br />STILL more!
+
+
+      section
+        h3.bullet I've been hacking on Web Audio stuff for the last 3 years
+        h2.bullet so I've done the same things over and over
+        h1.bullet in different ways
+
+
+      section
+        h3.bullet I've also spoken to many people about audio stuff
+        ul
+          li <strong>Angelina Fabbro</strong><span class="bullet"> saw my <tt>&lt;audio-tags&gt;</tt> and said "hey this looks promising, let's do more of this!"</span><span class="bullet">, so they created a GitHub org for "audio stuff"</span><span class="bullet"><br />But we didn't know what exactly to put in there...</span>
+          li <strong>Jordan Santell</strong> <span class="bullet">discussed his <tt>component</tt> based audio components.</span>
+          li <strong>Max Ogden</strong> <span class="bullet">and his little modules made me understand "the Node Way"</span>
+
+      section
+        h3.bullet At some point the stars aligned:
+        ul
+          li I <em>finally</em> understood AudioParams
+          li I found the way to simulate custom audio nodes
+          li and I was going to speak about music in the 21st century
+        h2.bullet Suddenly everything made sense
+
+      section
+        h2.bullet It was, at last, the moment for...
+ 
+      section
+        h3.bullet <span class="bullet">(dramatic pause)</span>
+
+      section
+        h1.bullet OpenMusic
+        h3.bullet Modules and components<br/>for Web Audio<br /><a href="https://github.com/openmusic">github.com/openmusic</a>
+
+
+      section
+        h2.bullet OpenMusic right now:
+        ul
+          li web components: oscilloscope, slider
+          li audio components: oscillator, sample player, clipper, dcbias
+          li eventing: tracker player
+          li audio generation: noise functions (white, brown, pink)
+        p.bullet All based on <a href="https://npmjs.org/">npm</a>, dependencies sorted out on <tt>npm install</tt>
+
+
+      section
+        h1.bullet How it looks like
+        pre.bullet
+          code.language-javascript.
+            var Oscillator = require('openmusic-oscillator');
+            var ac = new AudioContext();
+            var osc = Oscillator(ac);
+            osc.connect(ac.destination);
+            osc.start();
+        p.bullet i.e. pretty much like other <tt>AudioNodes</tt>
+
+      section
+        h1.bullet Principles
+        ul
+          li behave like standard <tt>AudioNode</tt>s
+          li one functionality, one module
+          li composable
+          
+      section
+        h1.bullet Our wish:
+        ul
+          li People use these bits and pieces
+          li Or they look at them and build their own and we can use theirs
+          li Bits and pieces become tools
+          li A web audio ecosystem forms...
+        h3.bullet ... and we can make lots of MUSIC stuff!
+
+      section
+        h1 QUESTIONS?
+
+      section
+        h1.bullet <del>QUESTIONS?</del>
+
+
+      section(data-bespoke-state='title')
+        h1 Thanks!
+        h2 <a href="https://twitter.com/supersole">@supersole</a>
+        h3 <a href="http://soledadpenades.com">soledadpenades.com</a>
+
+
+
 
     script(src='build/build.js')
