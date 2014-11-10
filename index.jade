@@ -298,19 +298,19 @@ html
               drawSample(canvas, analyserData);
             }
 
-      section
-        h1 Analyser
-        iframe(src='examples/regenerate_oscillator_analysed')
-
 
       section
-        h1.bullet Now,
-        h2.bullet can we play something other than that beep?
-        h3.bullet Yes!
-
+        h1 Properties, k-rates, a-rates, and AudioParams
+        h3 There is a reason for everything.
 
       section
-        h3.bullet Nodes have properties we can change, e.g.<br/><tt>oscillator.type</tt>
+        h3 Node instances are just JavaScript objects
+        h2 They have properties
+        h3 and we can set them!
+
+      section
+        h3.bullet for example,
+        h2.bullet <tt>oscillator.type</tt>
         ul
           li sine
           li square
