@@ -71,7 +71,7 @@ html
           li some OS display a fullscreen player
 
       section
-        h1 This won’t do for edgy artists
+        h1 This won’t do<br />for edgy artists
 
       section
         h3.bullet Is it all over?
@@ -110,7 +110,7 @@ html
             var oscillator = audioContext.createOscillator();
 
       section
-        h2.bullet 3) connect nodes<br />to build the audio graph
+        h2.bullet 3) connect nodes to<br />build the audio graph
         pre.bullet
           code.language-javascript.
             oscillator.connect(audioContext.destination);
@@ -118,6 +118,13 @@ html
       section
         h3 The audio graph
         img(src='images/modular-routing.png', alt='modular routing in web audio')
+
+      section
+        h3 Nodes taxonomy
+        ul
+          li audio emission
+          li audio manipulation
+          li audio analysis
 
       section
         h2.bullet 4) control nodes with their JS API
@@ -135,51 +142,83 @@ html
             oscillator.start(audioContext.currentTime);
         p <a href="examples/live_oscillator/">demo→</a>
 
+
       section
-        h3 A taxonomy of nodes
-        ul
-          li audio emission
-          li audio manipulation
-          li audio analysis
+        h1 It’s a matter of time
+
+      section
+        h3.bullet In order to get smoothly playing sounds,
+        h2.bullet Web Audio runs in the future
+        p.bullet and everything is scheduled ahead of time.
 
 
       section
-        h2.bullet Starting/stopping
+        p TODO: UI vs Audio thread timing
+
+      section
+        h2.bullet Starting oscillators
+        pre.bullet
+          code.language-javascript.
+            // start it 'now'
+            oscillator.start(audioContext.currentTime);
+        pre.bullet
+          code.language-javascript.
+            // start it 3 seconds from 'now'
+            oscillator.start(audioContext.currentTime + 3);
+
+      section
+        h2.bullet Stopping oscillators
+        pre.bullet
+          code.language-javascript.
+            // stop it 'now'
+            oscillator.stop(audioContext.currentTime);
+        pre.bullet
+          code.language-javascript.
+            // stop it in 3 seconds from 'now'
+            oscillator.stop(audioContext.currentTime + 3);
+
+      section
+        h2.bullet Restarting?
         pre
           code.language-javascript.
             // start it now
-            oscillator.start(audioContext.currentTime);
+            var now = audioContext.currentTime;
+            oscillator.start(now);
+            // stop it 3 seconds later
+            oscillator.stop(now + 3);
+            // start it again another 3 seconds after
+            oscillator.start(now + 6);
 
-            // 3 seconds from now
-            oscillator.start(audioContext.currentTime + 3)
-
-            // stop it now
-            oscillator.stop(audioContext.currentTime);
-            
-            // start it again
-            oscillator.start(audioContext.currentTime); // !?!
-
-      section
-        h3.bullet Why can’t oscillators be restarted?
-        h2.bullet Welcome to your first Web Audio...
-        h1.bullet GOTCHA!
-
+      section.emphatic-text(data-bespoke-backdrop='emphatic')
+        h2 That won’t work.
 
       section
-        h2.bullet Because of performance reasons
-        h3.bullet One-use only nodes
+        h3.bullet Because of performance reasons,
+        h2.bullet some nodes are one-use only.
+
+      section
+        h2.bullet Nodes that have been stopped
         ul
-            li use and forget
-            li automatically disposed of by the GC
-            li as long as you don't keep <a href="http://webaudio.github.io/web-audio-api/#lifetime-1">references</a>
-            li watch out for those memory leaks!
-            li the Web Audio Editor is super helpful
-        p.bullet <a href="examples/live_leaky_oscillators/">demo→</a>
-
+          li are automatically disposed of by the GC
+          li as long as you don't keep <a href="http://webaudio.github.io/web-audio-api/#lifetime-1">references</a>
+      
+      section
+        h3 I use
+        h2 Firefox’s Web Audio Editor
+        h3 to watch out for memory leaks
 
       section
-        h1 Write your own wrappers
+        h3 Leaked nodes
+        img(src='images/leaked-nodes.png', alt='leaked nodes in web audio', style='height: 80%; width: auto')
 
+      section
+        h3.bullet But you can
+        h2.bullet write your own wrappers
+        h3.bullet to work around this.
+
+      section
+        h3 example:
+        h2 Oscillator.js
 
       section
         h2.bullet Oscillator.js (1/3)
@@ -187,8 +226,6 @@ html
           code.language-javascript.
             function Oscillator(context) {
               var node = null;
-              var nodeNeedsNulling = false;
-
               this.start = function(when) {
                 ensureNodeIsLive();
                 node.start(when);
@@ -198,28 +235,23 @@ html
         h2.bullet Oscillator.js (2/3)
         pre
           code.language-javascript.
-            // continues
             this.stop = function(when) {
               if(node === null) {
                 return;
               }
-              nodeNeedsNulling = true;
               node.stop(when);
+              node = null;
             };
 
       section
         h2.bullet Oscillator.js (3/3)
         pre
           code.language-javascript.
-            // continues
-              function ensureNodeIsLive() {
-                if(nodeNeedsNulling || node === null) {
-                  node = context.createOscillator();
-                }
-                nodeNeedsNulling = false;
+            function ensureNodeIsLive() {
+              if(node === null) {
+                node = context.createOscillator();
               }
             }
-
 
       section
         h2.bullet Using it
@@ -227,15 +259,13 @@ html
           code.language-javascript.
             var ctx = new AudioContext();
             var osc = new Oscillator(ctx);
+            var now = ctx.currentTime;
 
-            function restart() {
-              osc.stop(0);
-              osc.start(0);
-            }
+            osc.start(now);
+            osc.stop(now + 3);
+            osc.start(now + 6);
 
-            osc.start(0);
-
-            setTimeout(restart, 1000);
+            // Works!
 
       section
         h2 Self regenerating oscillator
