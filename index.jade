@@ -260,27 +260,24 @@ html
             var ctx = new AudioContext();
             var osc = new Oscillator(ctx);
             var now = ctx.currentTime;
-
             osc.start(now);
             osc.stop(now + 3);
             osc.start(now + 6);
-
-            // Works!
-
-      section
-        h2 Self regenerating oscillator
-        iframe(src='examples/regenerate_oscillator')
+            // ^^^ works!
 
       section
-        h3.bullet But before I continue...
-        h2.bullet It would be nice to <em>see</em> what is going on!
+        h1 Look at that sound
 
       section
-        h2.bullet Let’s use an
-        h1.bullet <tt>AnalyserNode</tt>
+        h2.bullet Analyser Nodes
+        h3.bullet provide frequency and time data about their input
 
       section
-        h2 <tt>AnalyserNode</tt>, 1
+        h3 example:
+        h2 an oscilloscope
+        
+      section
+        h2 Oscilloscope (1/2)
         pre.bullet
           code.language-javascript.
             var analyser = context.createAnalyser();
@@ -292,12 +289,11 @@ html
             oscillator.connect(analyser);
 
       section
-        h2 <tt>AnalyserNode</tt>, 2
+        h2 Oscilloscope (2/2)
         pre.bullet
           code.language-javascript.
-            requestAnimationFrame(animate);
-
             function animate() {
+              requestAnimationFrame(animate);
               analyser.getFloatTimeDomainData(analyserData);
               drawSample(canvas, analyserData);
             }
