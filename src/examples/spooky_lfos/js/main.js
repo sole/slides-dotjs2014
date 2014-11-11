@@ -25,11 +25,11 @@ window.addEventListener('load', function() {
   gain.connect(osc.frequency);
   gain.gain.value = 0;
 
-  osc.frequency.value = 440;
+  osc.frequency.value = 220;
   lfOsc.frequency.value = 1;
 
   var canvas = document.querySelector('canvas');
-    analyser.fftSize = 1024;
+  analyser.fftSize = 1024;
   var analyserTimeData = new Float32Array(analyser.frequencyBinCount);
 
   var playing = false;

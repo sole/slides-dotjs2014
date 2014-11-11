@@ -419,7 +419,7 @@ html
 
       section
         h3.bullet <em>ADSwhat...?</em>
-        img(src='./examples/_data/adsr.png', class='bullet', style='height: 70%; width=auto;background:#fff')
+        img(src='./examples/_data/adsr.png', class='bullet filter-invert', style='height: 70%; width=auto;')
         h3.bullet Attack / Decay / Sustain / Release
 
 
@@ -454,14 +454,14 @@ html
         h3.bullet More natural sounds with an
         h2.bullet ADSR envelope
         h3.bullet and
-        h1.bullet Gain Nodes
+        h2.bullet Gain Nodes
 
 
       section
         h2.bullet Gain nodes
         h3.bullet multiply their input by their <tt>gain</tt> value
         p.bullet so they can be used to
-        ul
+        ul.horizontal
           li quieten or 
           li amplify sounds
         
@@ -493,7 +493,7 @@ html
           code.language-javascript.
             param.cancelScheduledEvents(when);
 
-        p.bullet removes all events from the list, from <tt>when</tt> onwards
+        p.bullet removes all events from the list, from <tt>when</tt> onwards.
 
       section
         h3.bullet Superpower #2
@@ -501,7 +501,7 @@ html
 
       section
         h3.bullet Connect the output of one node<br />to another node’s AudioParam
-        img(src='./images/modulation.gif', class='bullet', style='height: 70%; width=auto;background:#fff')
+        img(src='./images/modulation.gif', class='bullet filter-invert', style='height: 70%; width=auto;')
         p.bullet and get interesting effects
 
       section
@@ -568,7 +568,7 @@ html
       section
         h3.bullet Each 
         h2.bullet <tt>AudioBufferSourceNode</tt>
-        h3.bullet requires a
+        h3.bullet requires an
         h2.bullet <tt>AudioBufferSource</tt>
 
       section

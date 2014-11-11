@@ -2,6 +2,8 @@ window.addEventListener('load', function() {
   
   var samplePath = '../_data/pewpew.ogg';
   var button = document.querySelector('button');
+  var pewCounter = document.getElementById('pewcounter');
+  var numPews = 0;
   var context = new AudioContext();
   var buffer;
 
@@ -37,6 +39,8 @@ window.addEventListener('load', function() {
     bs.buffer = buffer;
     bs.connect(context.destination);
     bs.start();
+    numPews++;
+    pewCounter.innerHTML = numPews;
   }
 
 
