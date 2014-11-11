@@ -486,63 +486,65 @@ html
           code.language-javascript.
             param.cancelScheduledEvents(when);
 
-        p.bullet removes all events from the list from <tt>when</tt> onwards
-
+        p.bullet removes all events from the list, from <tt>when</tt> onwards
 
       section
-        h1.bullet Superpower #2
+        h3.bullet Superpower #2
         h2.bullet Modulation
-        h3.bullet Connect the output of one node to another node’s AudioParam
-
 
       section
-        h1 LFOs
+        h3.bullet Connect the output of one node<br />to another node’s AudioParam
+        img(src='./images/modulation.gif', class='bullet', style='height: 70%; width=auto;background:#fff')
+        p.bullet and get interesting effects
+
+      section
+        h3.bullet Modulation in practise
+        h2.bullet LFOs
+        h3.bullet (Low Frequency Oscillators)
+
+      section
+        h3.bullet We can’t hear those frequencies...
+        h2.bullet but can use them<br />to alter values<br />in a range<br />we can hear
+
+      section
         img(src='./examples/_data/lfo.png', class='bullet', style='width: 80%; height: auto;')
 
 
       section
-        h1 LFOs
-        h2.bullet We can’t hear those frequencies...
-        h3.bullet but can use them to alter other values we <em>can</em> notice!
-
-      section
-        h1 SPOOKY SOUNDS
+        h3.bullet Example:
+        h2.bullet SPOOKY SOUNDS
+        h3.bullet alter an oscillator’s frequency <br />with another oscillator’s output
 
 
       section
-        h2.bullet Watch out!
+        h3.bullet Watch out!
 
         pre.bullet
           code.language-javascript.
             var context = new AudioContext();
             var osc = context.createOscillator();
-            var lfOsc = context.createOscillator();
-
+            var lfo = context.createOscillator();
             var gain = context.createGain();
-            lfOsc.connect(gain);
-            
-            // The output from gain is the [-1, 1] range
+            osc.connect(context.destination);
+            lfo.connect(gain);
+            // The output from gain is in the [-1, 1] range
             gain.gain.value = 100;
             // now the output from gain is in the [-100, 100] range!
-            
-            gain.connect(osc.frequency); // NOT the destination
+            gain.connect(osc.frequency);
 
 
       section
-        h2.bullet KEEP watching out
+        h3.bullet Keep watching out
 
         pre.bullet
           code.language-javascript.
             osc.frequency.value = 440;
-
-            // oscillation frequency is 1Hz = once per second
-            lfOsc.frequency.value = 1;
-            
+            lfo.frequency.value = 1; // 1Hz = once per second
             osc.start();
-            lfOsc.start();
+            lfo.start();
                        
       section
-        h1 spooky LFOs
+        h2 Spooky LFOs
         iframe(src='examples/spooky_lfos')
 
 
