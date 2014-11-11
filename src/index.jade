@@ -153,7 +153,7 @@ html
 
 
       section
-        p TODO: UI vs Audio thread timing
+        p TODO: UI vs Audio thread timing, and the audio buffer that must be fed continuously
 
       section
         h2.bullet Starting oscillators
@@ -328,45 +328,57 @@ html
 
 
       section
-        h3.bullet <tt>oscillator.frequency</tt>
-        h2.bullet Naive attempt:
+        h3.bullet But if we try to change the frequency...
         pre.bullet
           code.language-javascript.
             oscillator.frequency = 880;
-        h1.bullet It doesn’t work!<span class="bullet">😬</span>
+        h3.bullet ... it doesn’t work!
+
+      section
+        h3 Why?
 
 
       section
-        h3.bullet <tt>oscillator.frequency</tt><br/>is an <tt>AudioParam</tt>
-        h2.bullet It is <em>special</em>
+        div.bullet
+          p
+            tt oscillator.frequency
+          h3 is an
+          p
+            tt AudioParam
+        h1.bullet It is <em>special</em>
+
+      section
         pre.bullet
           code.language-javascript.
             // Access it with
             oscillator.frequency.value = 880;
-        p.bullet <a href="examples/live_oscillator_freqchange/">demo→</a>
 
       section
-        h2.bullet So what is the point of <tt>AudioParam</tt>?
-        h1.bullet Superpowers.
+        h3.bullet So what is the point<br />of Audio Params?
+        h2.bullet Superpowers.
 
       section
-        h1.bullet Superpower #1
-        h2.bullet Scheduling changes with accurate timing
+        h3.bullet Superpower #1
+        h2.bullet Scheduling changes<br />with accurate timing
+
+      // TODO a-params and k-params
 
       section
-        h1.bullet What NOT to do
+        h2.bullet What not to use
+        h3.bullet when building curves and fades
         ul
           li setInterval
           li setTimeout
 
       section
-        h1 Stepped sounds
+        h3 What you expect is not what you get
         iframe(src='examples/step_sounds')
 
 
       section
-        h2.bullet <tt>AudioParam</tt> approach
-        h3.bullet Web Audio keeps a list of timed events <strong>per parameter</strong>
+        h3.bullet Instead,
+        h2.bullet schedule audio parameter changes
+        h3.bullet using
         ul
           li <tt>setValueAtTime</tt>
           li <tt>linearRampToValueAtTime</tt>
@@ -374,6 +386,12 @@ html
           li <tt>setTargetAtTime</tt>
           li <tt>setValueCurveAtTime</tt>
 
+      section
+        h3.bullet Web Audio will interpolate between events
+        ul
+          li k-params: updating values every 128 samples
+          li a-params: updating values every sample
+        h3.bullet and you get effortlessly smooth transitions.
 
       section
         h3.bullet Go from 440 to 880 Hz in 3 seconds
@@ -387,93 +405,88 @@ html
               880,
               audioContext.currentTime + 3
             );
-        p.bullet <a href="examples/live_oscillator_freqchange_nicer/">demo→</a>
+
+      section
+        h3.bullet A practical application of timed events
+        h2.bullet ADSR envelopes
+
+      section
+        h3.bullet <em>ADSwhat...?</em>
+        img(src='./examples/_data/adsr.png', class='bullet', style='height: 70%; width=auto;background:#fff')
+        h3.bullet Attack / Decay / Sustain / Release
 
 
       section
-        h1.bullet Minigotchas
+        h3.bullet Relatively easy to configure and compute
+        ul.horizontal
+          li
+            img(src='images/subtractor.jpg', alt='subtractor')
+          li
+            img(src='images/malstrom.jpg', alt='malstrom')
+
+        h3.bullet (so very common in substractive synthesis!)
+
+
+      section
+        h3 ADSR part 1: Attack/Decay/Sustain
+        pre.bullet
+          code.language-javascript.
+            param.setValueAtTime(0, t);
+            param.linearRampToValueAtTime(1, t + attackLength);
+            param.linearRampToValueAtTime(sustainValue,
+              t + attackLength + decayLength);
+
+      section
+        h3 ADSR part 2: Release phase
+        pre.bullet
+          code.language-javascript.
+            param.linearRampToValueAtTime(0, t + releaseLength);
+
+
+      section
+        h3.bullet More natural sounds with an
+        h2.bullet ADSR envelope
+        h3.bullet and
+        h1.bullet Gain Nodes
+
+
+      section
+        h2.bullet Gain nodes
+        h3.bullet multiply their input by their <tt>gain</tt> value
+        p.bullet so they can be used to
         ul
-          li avoid using <tt>param.value</tt> <span class="bullet">--it doesn’t add an event to the list</span>
-          li avoid using <tt>0</tt> as <tt>when</tt><span class="bullet">--times have to be ascending</span>
-
+          li quieten or 
+          li amplify sounds
+        
       section
-        h3.bullet Let’s build an ADSR envelope
-        img(src='./examples/_data/adsr.png', class='bullet', style='height: 80%; width=auto')
-
-
-      section
-        h1.bullet <em>ADSwhat...?</em>
-        ul
-          li Attack Decay Sustain Release
-          li Used a lot in substractive synthesis
-          li Relatively easy to configure and compute
-
-      section
-        div.singleimage
-          img(src='img/subtractor.jpg', alt='subtractor')
-
-
-      section
-        div.singleimage
-          img(src='img/malstrom.jpg', alt='malstrom')
-
-
-      section
-        h3.bullet We need a new node for controlling the volume
-        h1.bullet <tt>GainNode</tt>
-
+        h3.bullet A gain node in practise
         pre.bullet
           code.language-javascript.
             var ctx = new AudioContext();
             var osc = ctx.createOscillator();
-            var gain = ctx.createGain(); // *** NEW
+            var gain = ctx.createGain();
 
-            osc.connect(gain); // *** NEW
-            gain.connect(ctx.destination); // *** NEW
-
-      section
-        h2 ADSR part 1
-        pre.bullet
-          code.language-javascript.
-            // Attack/Decay/Sustain phase
-            gain.gain.setValueAtTime(
-              0,
-              audioContext.currentTime
-            );
-            gain.gain.linearRampToValueAtTime(
-              1,
-              audioContext.currentTime + attackLength
-            );
-            gain.gain.linearRampToValueAtTime(
-              sustainValue,
-              audioContext.currentTime + attackLength + decayLength
-            );
-            
-
-      section
-        h2 ADSR part 2
-        pre.bullet
-          code.language-javascript.
-            // Release phase
-            gain.gain.linearRampToValueAtTime(
-              0,
-              audioContext.currentTime + releaseLength
-            );
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            gain.gain.setValueAtTime(0.5, ctx.currentTime);
 
 
       section
-        h1 Envelopes
-        iframe(src='examples/envelopes')
+        h3.bullet If we schedule changes to the <tt>gain</tt> parameter, we get
+        h2.bullet a volume envelope
+        iframe(src='examples/envelopes', class='bullet')
 
 
       section
-        h2 Cancelling events!
+        h3.bullet Of course,
+        h2.bullet cancelling events
+        h3.bullet is possible
 
         pre.bullet
           code.language-javascript.
-            osc.frequency.cancelScheduledEvents(
-              audioContext.currentTime
-            );
+            param.cancelScheduledEvents(when);
+
+        p.bullet removes all events from the list from <tt>when</tt> onwards
 
 
       section
