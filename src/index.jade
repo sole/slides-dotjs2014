@@ -609,50 +609,44 @@ html
         iframe(src='examples/pewpewmatic')
 
       section
-        h3.bullet <tt>MediaElementAudioSourceNode</tt>
-        p.bullet Takes the output of <tt>&lt;audio&gt;</tt> or <tt>&lt;video&gt;</tt> and incorporates them into the graph.
+        h2.bullet <tt>MediaElementAudioSourceNode</tt>
+        h3.bullet Takes the output of <tt>&lt;audio&gt;</tt> or <tt>&lt;video&gt;</tt><br />and streams it into the audio graph.
         pre.bullet
           code.language-javascript.
             var video = document.querySelector('video');
-            var audioSourceNode = 
+            var videoNode = 
               context.createMediaElementAudioSource(
                 video
               );
-            audioSourceNode.connect(context.destination);
+            videoNode.connect(context.destination);
 
 
       section
-        h1 Media element
+        h2 Media element
         iframe(src='examples/mediaelement')
         p <a href="examples/mediaelement/">demo→</a>
 
 
-
       section
-        h2.bullet More Web Audio nodes
+        h3.bullet This is just an introduction
+        h2.bullet There are many more<br />built-in node types
         ul
-          li delay
+          li delay (echos)
           li filter (low/pass/high frequencies)
           li panning (3D sounds!)
-          li reverb (via convolver)
-          li splitter
-          li waveshaper
-          li compressor
-        p.bullet Their parameters can also be modulated and automated!
-
+          li convolver (reverberation)
+          li splitter &amp; merger (channel manipulation)
+          li waveshaper (distortion effects)
+          li compressor (for maximum ooomph)
 
       section
-        div.singleimage
-          img(src='img/audiocontext-interface.png', alt='audiocontext interface', style='width: 80%; height: auto')
-
-      section
-        h1.bullet Wait, there is more!
-        h2.bullet Mix all the APIs!
+        h2.bullet Possibilities abound
         ul
-          li Using getUserMedia + MediaElementAudioSourceNode
+          li getUserMedia + MediaElementAudioSourceNode
           li Web Audio Workers - generate audio in realtime with JavaScript
-          li OfflineAudioContext - render as fast as possible! Beat detection, etc...
-          li ???
+          li OfflineAudioContext - Beat detection, audio rendering, etc...
+          li ...
+          li You set the limit
           li BE EDGY!
 
 
@@ -662,16 +656,17 @@ html
 
       section
         h3.bullet I've been hacking on Web Audio stuff for the last 3 years
-        h2.bullet so I've done the same things over and over
-        h1.bullet in different ways
+      section
+        h3.bullet so I've done the same things over and over
+        h2.bullet in different ways
 
 
       section
         h3.bullet I've also spoken to many people about audio stuff
         ul
-          li <strong>Angelina Fabbro</strong><span class="bullet"> saw my <tt>&lt;audio-tags&gt;</tt> and said "hey this looks promising, let's do more of this!"</span><span class="bullet">, so they created a GitHub org for "audio stuff"</span><span class="bullet"><br />But we didn't know what exactly to put in there...</span>
-          li <strong>Jordan Santell</strong> <span class="bullet">discussed his <tt>component</tt> based audio components.</span>
-          li <strong>Max Ogden</strong> <span class="bullet">and his little modules made me understand "the Node Way"</span>
+          li Angelina Fabbro
+          li Jordan Santell
+          li Max Ogden
 
       section
         h3.bullet At some point the stars aligned:
@@ -679,14 +674,13 @@ html
           li I <em>finally</em> understood AudioParams
           li I found the way to simulate custom audio nodes
           li and I was going to speak about music in the 21st century
-        h2.bullet Suddenly everything made sense
 
       section
-        h2.bullet It was, at last, the moment for...
+        h3.bullet Suddenly everything made sense
+
+      section
+        h3.bullet It was, at last, the moment for...
  
-      section
-        h3.bullet <span class="bullet">(dramatic pause)</span>
-
       section
         h1.bullet OpenMusic
         h3.bullet Modules and components<br/>for Web Audio<br /><a href="https://github.com/openmusic">github.com/openmusic</a>
@@ -699,11 +693,11 @@ html
           li audio components: oscillator, sample player, clipper, dcbias
           li eventing: tracker player
           li audio generation: noise functions (white, brown, pink)
-        p.bullet All based on <a href="https://npmjs.org/">npm</a>, dependencies sorted out on <tt>npm install</tt>
+        h3.bullet All based on <a href="https://npmjs.org/">npm</a>, dependencies sorted out on <tt>npm install</tt>
 
 
       section
-        h1.bullet How it looks like
+        h2.bullet How it looks like
         pre.bullet
           code.language-javascript.
             var Oscillator = require('openmusic-oscillator');
@@ -711,35 +705,29 @@ html
             var osc = Oscillator(ac);
             osc.connect(ac.destination);
             osc.start();
-        p.bullet i.e. pretty much like other <tt>AudioNodes</tt>
+        h3.bullet i.e. pretty much like other <tt>AudioNodes</tt>
 
       section
-        h1.bullet Principles
+        h2.bullet Principles
         ul
           li behave like standard <tt>AudioNode</tt>s
           li one functionality, one module
           li composable
           
       section
-        h1.bullet Our wish:
+        h2.bullet Our wish:
         ul
           li People use these bits and pieces
           li Or they look at them and build their own and we can use theirs
           li Bits and pieces become tools
           li A web audio ecosystem forms...
-        h3.bullet ... and we can make lots of MUSIC stuff!
-
-      section
-        h1 QUESTIONS?
-
-      section
-        h1.bullet <del>QUESTIONS?</del>
+        h3.bullet ... and everyone gets to create lots of music!
 
 
       section(data-bespoke-state='title')
-        h1 Thanks!
+        h3 Thanks!
         h2 <a href="https://twitter.com/supersole">@supersole</a>
-        h3 <a href="http://soledadpenades.com">soledadpenades.com</a>
+        h2 <a href="http://soledadpenades.com">soledadpenades.com</a>
 
 
 
