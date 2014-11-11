@@ -550,60 +550,62 @@ html
 
       section
         h1.bullet Playing existing samples
-        ul
-          li <tt>AudioBufferSourceNode</tt> for short samples (&lt; 1 min)
-          li <tt>MediaElementAudioSourceNode</tt> for longer sounds
+
+      section
+        h2.bullet <tt>AudioBufferSourceNode</tt>
+        h3.bullet for short samples (&lt; 1 min)
+        h2.bullet <tt>MediaElementAudioSourceNode</tt>
+        h3.bullet for longer sounds
 
 
       section
-        h3.bullet <tt>AudioBufferSourceNode</tt>, 1
+        h3.bullet Each 
+        h2.bullet <tt>AudioBufferSourceNode</tt>
+        h3.bullet requires a
+        h2.bullet <tt>AudioBufferSource</tt>
+
+      section
+        h3.bullet 1) Loading data for the AudioBufferSource
         pre
           code.language-javascript.
             var context = new AudioContext();
-            var pewSource = context.createBufferSource();
             var request = new XMLHttpRequest();
             request.open('GET', samplePath, true);
-            request.responseType = 'arraybuffer'; // we want binary data 'as is'
+            request.responseType = 'arraybuffer';
             request.onload = function() {
               context.decodeAudioData(
-                request.response,
-                loadedCallback, errorCallback
+                request.response, loadCb, errorCb
               );
             };
 
       section
-        h3.bullet <tt>AudioBufferSourceNode</tt>, 2
+        h3.bullet 2) Instancing the AudioBufferSourceNode
         pre
           code.language-javascript.
-            var abs = context.createBufferSource();
+            var bufferSource = context.createBufferSource();
 
             function loadedCallback(bufferSource) {
-              abs.buffer = bufferSource;
-              abs.start();
-            }
-
-            function errorCallback() {
-              alert('No PEW PEW for you');
+              bufferSource.buffer = bufferSource;
+              bufferSource.connect(context.destination);
             }
 
 
       section
-        h3.bullet <tt>AudioBufferSourceNode</tt>, 3
-        p.bullet Just like oscillators!
+        h3.bullet An uncanny similarity to oscillators
         pre.bullet
           code.language-javascript.
-            abs.start(when);
-            abs.stop(when);
+            bufferSource.start(when);
+            bufferSource.stop(when);
 
-        p.bullet <tt>AudioBufferSourceNode</tt> even die like oscillators!
+        p.bullet They even have to be recreated like oscillators!
 
       section
-        h2 Pssst:
+        h2.bullet Despair not
         h3.bullet You can create them again and reuse the <tt>buffer</tt>
 
       
       section
-        h1 pewpewmatic
+        h2 pewpewmatic
         iframe(src='examples/pewpewmatic')
 
       section
