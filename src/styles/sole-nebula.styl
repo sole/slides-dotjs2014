@@ -25,9 +25,15 @@ a
   padding-left: 0
 
 iframe
-  border: 1px solid #333
+  border: 0px solid #333
   height: 70%
   width: 90%
+
+ul
+  text-align: center
+
+ul li:before
+  content: ""
 
 .horizontal li
   display: inline
@@ -46,12 +52,18 @@ iframe
 
 .emphatic
   background: linear-gradient(red, black)
+
+.bespoke-slide
+  transition-length: 2s !important
+
+.bespoke-inactive.emphatic-text
+  filter: blur(10px)
+  
+.bespoke-active.emphatic-text
+  filter: none
   
 .filter-invert
   filter: invert(100%)
 
-//.bespoke-inactive
-//  filter: blur(20px)
-
-//.bespoke-active
-//  filter: none
+.openmusic
+  background: linear-gradient(#0ee, black)

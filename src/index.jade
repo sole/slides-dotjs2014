@@ -140,8 +140,6 @@ html
             var oscillator = audioContext.createOscillator();
             oscillator.connect(audioContext.destination);
             oscillator.start(audioContext.currentTime);
-        p <a href="examples/live_oscillator/">demo→</a>
-
 
       section
         h1 It’s a matter of time
@@ -618,6 +616,8 @@ html
       section
         h2.bullet <tt>MediaElementAudioSourceNode</tt>
         h3.bullet Takes the output of <tt>&lt;audio&gt;</tt> or <tt>&lt;video&gt;</tt><br />and streams it into the audio graph.
+
+      section
         pre.bullet
           code.language-javascript.
             var video = document.querySelector('video');
@@ -654,7 +654,7 @@ html
           li OfflineAudioContext - Beat detection, audio rendering, etc...
           li ...
           li You set the limit
-          li BE EDGY!
+          li (you are EDGY!)
 
 
       section
@@ -688,7 +688,7 @@ html
       section
         h3.bullet It was, at last, the moment for...
  
-      section
+      section.emphatic-text(data-bespoke-backdrop='openmusic')
         h1.bullet OpenMusic
         h3.bullet Modules and components<br/>for Web Audio<br /><a href="https://github.com/openmusic">github.com/openmusic</a>
 
