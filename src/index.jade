@@ -11,20 +11,20 @@ html
 
     article
 
-      section
+      section.intro
         h1 Tools for the<br/>21st Century Musician
 
-      section
+      section.supposition
         h3.bullet Let’s start with a supposition:
         h2.bullet You all are artists
         h1.bullet and very edgy!
 
-      section
+      section.supposition
         h3.bullet So you want to break fronteers;
         h2.bullet go where no one has been before:
         h1.bullet bring your art<br />to the web!
 
-      section
+      section.supposition
         h3.bullet Of course,
         h1.bullet with <tt>&lt;audio&gt;</tt>
           span.bullet , eh?
@@ -70,7 +70,7 @@ html
           li no fancy visualisations
           li some OS display a fullscreen player
 
-      section
+      section.emphatic-text(data-bespoke-backdrop='emphatic')
         h1 This won’t do<br />for edgy artists
 
       section
@@ -85,7 +85,7 @@ html
 
       section
         h2.bullet Web Audio
-        h3.bullet ~ accurately place sounds in space and time ~
+        h3.bullet accurately places sounds in space and time
         ul
           li fully controllable with a JS API
           li interoperable with other Web APIs
@@ -117,7 +117,7 @@ html
 
       section
         h3 The audio graph
-        img(src='images/modular-routing.png', alt='modular routing in web audio')
+        img(src='images/modular-routing.png', alt='modular routing in web audio', class='filter-invert')
 
       section
         h3 Nodes taxonomy
@@ -197,10 +197,9 @@ html
         h2.bullet some nodes are one-use only.
 
       section
-        h2.bullet Nodes that have been stopped
-        ul
-          li are automatically disposed of by the GC
-          li as long as you don't keep <a href="http://webaudio.github.io/web-audio-api/#lifetime-1">references</a>
+        h3.bullet Nodes that have been stopped
+        h2.bullet are automatically disposed of
+        h3.bullet as long as you don't keep <a href="http://webaudio.github.io/web-audio-api/#lifetime-1">references</a>
       
       section
         h3 I use
@@ -311,7 +310,7 @@ html
       section
         h3.bullet for example,
         h2.bullet <tt>oscillator.type</tt>
-        ul
+        ul.horizontal
           li sine
           li square
           li sawtooth
