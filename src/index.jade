@@ -263,6 +263,10 @@ html
             osc.stop(now + 3);
             osc.start(now + 6);
             // ^^^ works!
+      
+      section
+        h2 Oscillator.js
+        iframe(src='examples/regenerate_oscillator')
 
       section
         h1 Look at that sound
@@ -296,6 +300,10 @@ html
               analyser.getFloatTimeDomainData(analyserData);
               drawSample(canvas, analyserData);
             }
+
+      section
+        h2 Oscilloscope
+        iframe(src='examples/regenerate_oscillator_analysed')
 
 
       section
@@ -339,12 +347,12 @@ html
 
       section
         div.bullet
-          p
+          h2
             tt oscillator.frequency
           h3 is an
-          p
+          h2
             tt AudioParam
-        h1.bullet It is <em>special</em>
+        h2.bullet It is <em>special</em>
 
       section
         pre.bullet

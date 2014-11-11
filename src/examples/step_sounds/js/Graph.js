@@ -157,10 +157,7 @@ function Graph(title, easing) {
 
 		audioSource.src = getWaveData(buffer, sampleRate);
 
-    audio.addEventListener('canplaythrough', function() {
-      console.log('YA', audio);
-    });
-
+    
 		sampleBuilt = true;
 
 		div.classList.remove('disabled');
