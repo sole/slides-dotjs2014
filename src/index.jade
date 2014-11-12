@@ -120,7 +120,7 @@ html
         img(src='images/modular-routing.png', alt='modular routing in web audio', class='filter-invert')
 
       section
-        h3 Nodes taxonomy
+        h3.bullet Nodes taxonomy
         ul
           li audio emission
           li audio manipulation
@@ -557,7 +557,27 @@ html
 
 
       section
-        h1.bullet Playing existing samples
+        h3.bullet Transforming the sound
+        h2.bullet Filters
+
+      section
+        h3.bullet An implementation of common low-order filters is provided
+        ul.horizontal
+          li lowpass
+          li highpass
+          li bandpass
+          li lowshelf
+          li highshelf
+          li peaking
+          li notch
+      
+      section
+        h3 Filtered oscillator
+        iframe(src='examples/regenerate_oscillator_filtered_analysed/')
+
+
+      section
+        h1.bullet Playing existing sounds
 
       section
         h2.bullet <tt>AudioBufferSourceNode</tt>
