@@ -13,12 +13,13 @@ window.addEventListener('load', function() {
   gain.connect(limiterGain);
   limiterGain.connect(context.destination);
 
-  limiterGain.gain.value = 0.4;
-  gain.gain.value = 0.5;
+  limiterGain.gain.value = 10;
+  gain.gain.value = 0.7;
 
   lfOsc.connect(lfGain);
   lfGain.gain.value = 1;
   lfGain.connect(gain.gain);
+
   lfOsc.frequency.value = 0;
   lfOsc.type = 'sine';
   lfOsc.start();
