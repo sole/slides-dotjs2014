@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="355px" height="102px" viewBox="0 0 355 102" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.1.1 (8761) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Desktop" sketch:type="MSArtboardGroup" transform="translate(-214.000000, -394.000000)">
+            <g id="Group" sketch:type="MSLayerGroup" transform="translate(217.000000, 395.000000)">
+                <g id="UI-thread-+-Line" transform="translate(0.000000, 18.000000)" fill="#FFFFFF">
+                    <text id="UI" sketch:type="MSTextLayer" font-family="Futura" font-size="12" font-weight="420">
+                        <tspan x="295" y="12">UI</tspan>
+                    </text>
+                    <path d="M-0.55511811,8.5 L281.621846,8.5" id="Line" stroke="#FFFFFF" stroke-width="3" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                    <path id="Line-decoration-1" d="M281.444882,8.5 C277.664882,7.45 274.424882,6.55 270.644882,5.5 C270.644882,7.6 270.644882,9.4 270.644882,11.5 C274.424882,10.45 277.664882,9.55 281.444882,8.5 C281.444882,8.5 281.444882,8.5 281.444882,8.5 Z" stroke="#FFFFFF" stroke-width="3" stroke-linecap="square"></path>
+                </g>
+                <g id="UI-thread-+-Line-2" transform="translate(1.000000, 45.000000)" fill="#FFFFFF">
+                    <text id="Web-Audio" sketch:type="MSTextLayer" font-family="Futura" font-size="12" font-weight="420">
+                        <tspan x="288.779456" y="12">Web Audio</tspan>
+                    </text>
+                    <path d="M-0.553149606,8.05273438 L280.623187,8.05273438" id="Line" stroke="#FFFFFF" stroke-width="3" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                    <path id="Line-decoration-1" d="M280.44685,8.05273438 C276.66685,7.00273438 273.42685,6.10273437 269.64685,5.05273438 C269.64685,7.15273437 269.64685,8.95273438 269.64685,11.0527344 C273.42685,10.0027344 276.66685,9.10273438 280.44685,8.05273438 C280.44685,8.05273438 280.44685,8.05273438 280.44685,8.05273438 Z" stroke="#FFFFFF" stroke-width="3" stroke-linecap="square"></path>
+                </g>
+                <path d="M53,0.5 L53,99.7471695" id="Line" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                <text id="t" sketch:type="MSTextLayer" font-family="Futura" font-size="12" font-weight="420" fill="#FFFFFF">
+                    <tspan x="67" y="15">t</tspan>
+                </text>
+                <text id="t+buffer" sketch:type="MSTextLayer" font-family="Futura" font-size="12" font-weight="420" fill="#FFFFFF">
+                    <tspan x="67" y="45">t+buffer</tspan>
+                </text>
+                <text id="t-2" sketch:type="MSTextLayer" font-family="Futura" font-size="12" font-weight="420" fill="#FFFFFF">
+                    <tspan x="7" y="45">t</tspan>
+                </text>
+                <circle id="Oval-1" fill="#FFFFFF" sketch:type="MSShapeGroup" cx="9" cy="53" r="4"></circle>
+                <circle id="Oval-2" fill="#FFFFFF" sketch:type="MSShapeGroup" cx="69" cy="26" r="4"></circle>
+                <circle id="Oval-3" fill="#FFFFFF" sketch:type="MSShapeGroup" cx="69" cy="53" r="4"></circle>
+                <g id="Path-4-+-Line" transform="translate(71.000000, 28.000000)">
+                    <path d="M3.55271368e-15,32.5 C4.36773033,44.6825558 24.6015625,70.6113281 50.5742188,57.8125 C76.546875,45.0136719 53.5,8 53.5,8" id="Path-4" stroke="#FFFFFF" stroke-width="2" sketch:type="MSShapeGroup"></path>
+                    <path d="M57.5,14.5 L48.5,0.5" id="Line" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+                    <path id="Line-decoration-1" d="M48.8478785,1.04114439 C50.0087048,4.7885945 51.0036988,8.00069459 52.1645251,11.7481447 C53.9309999,10.6125538 55.4451212,9.6391901 57.211596,8.50359915 C54.2842949,5.89173999 51.7751796,3.65300356 48.8478785,1.04114439 C48.8478785,1.04114439 48.8478785,1.04114439 48.8478785,1.04114439 Z" fill="#FFFFFF"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

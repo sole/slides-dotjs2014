@@ -15,7 +15,7 @@ html
         h1 Tools for the<br/>21st Century Musician
 
       section.supposition
-        h3.bullet Let’s start with a supposition:
+        h3.bullet Let’s start with a proposition:
         h2.bullet You all are artists
         h1.bullet and very edgy!
 
@@ -52,7 +52,7 @@ html
 
 
       section
-        h3.bullet And can also dispatch events
+        h3.bullet And can dispatch events as well
         ul
           li loadeddata
           li error
@@ -76,6 +76,8 @@ html
       section
         h3.bullet Is it all over?
         h2.bullet Do we just give up and<br />start writing native apps?
+
+      section
         h1.bullet NO.
 
 
@@ -151,8 +153,7 @@ html
 
 
       section
-        p TODO: UI vs Audio thread timing, and the audio buffer that must be fed continuously
-
+        img(src='./images/threads.svg', class='', style='width: 80%; height=auto;')
       section
         h2.bullet Starting oscillators
         pre.bullet
@@ -282,12 +283,11 @@ html
         pre.bullet
           code.language-javascript.
             var analyser = context.createAnalyser();
-            analyser.fftSize = 2048;
             var analyserData = new Float32Array(
               analyser.frequencyBinCount
             );
-
             oscillator.connect(analyser);
+            analyser.connect(context.destination);
 
       section
         h2 Oscilloscope (2/2)
@@ -304,14 +304,14 @@ html
         iframe(src='examples/regenerate_oscillator_analysed')
 
 
-      section
-        h1 Properties, k-rates, a-rates, and AudioParams
-        h3 There is a reason for everything.
+      //section
+      //  h1 Properties, k-rates, a-rates, and AudioParams
+      //  h3 There is a reason for everything.
 
       section
-        h3 Node instances are just JavaScript objects
-        h2 They have properties
-        h3 and we can set them!
+        h3.bullet Node instances are just JavaScript objects
+        h1.bullet They have properties
+        h3.bullet and we can set them!
 
       section
         h3.bullet for example,
@@ -321,7 +321,7 @@ html
           li square
           li sawtooth
           li triangle
-          li custom
+          //li custom
 
         pre.bullet
           code.language-javascript.
@@ -382,9 +382,14 @@ html
 
       section
         h3.bullet Instead,
-        h2.bullet schedule audio parameter changes
+        h2.bullet use event lists
+
+      section
+        h3.bullet There is an event list per parameter
+        h2.bullet schedule events
         h3.bullet using
-        ul
+        h2.bullet Audio Param methods
+        ul.horizontal
           li <tt>setValueAtTime</tt>
           li <tt>linearRampToValueAtTime</tt>
           li <tt>exponentialRampToValueAtTime</tt>
@@ -393,9 +398,9 @@ html
 
       section
         h3.bullet Web Audio will interpolate between events
-        ul
-          li k-params: updating values every 128 samples
-          li a-params: updating values every sample
+        //ul
+        //  li k-params: updating values every 128 samples
+        //  li a-params: updating values every sample
         h3.bullet and you get effortlessly smooth transitions.
 
       section
@@ -532,9 +537,7 @@ html
             var gain = context.createGain();
             osc.connect(context.destination);
             lfo.connect(gain);
-            // The output from gain is in the [-1, 1] range
-            gain.gain.value = 100;
-            // now the output from gain is in the [-100, 100] range!
+            gain.gain.value = 100; // [-1, 1] => [-100, 100]
             gain.connect(osc.frequency);
 
 
@@ -556,24 +559,24 @@ html
         iframe(src='examples/spooky_lfos')
 
 
-      section
-        h3.bullet Transforming the sound
-        h2.bullet Filters
+      //section
+      //  h3.bullet Transforming the sound
+      //  h2.bullet Filters
 
-      section
-        h3.bullet An implementation of common low-order filters is provided
-        ul.horizontal
-          li lowpass
-          li highpass
-          li bandpass
-          li lowshelf
-          li highshelf
-          li peaking
-          li notch
+      //section
+      //  h3.bullet An implementation of common low-order filters is provided
+      //  ul.horizontal
+      //    li lowpass
+      //    li highpass
+      //   li bandpass
+      //    li lowshelf
+      //    li highshelf
+      //    li peaking
+      //   li notch
       
-      section
-        h3 Filtered oscillator
-        iframe(src='examples/regenerate_oscillator_filtered_analysed/')
+      //section
+      //  h3 Filtered oscillator
+      //  iframe(src='examples/regenerate_oscillator_filtered_analysed/')
 
 
       section
@@ -661,7 +664,7 @@ html
         h2.bullet There are many more<br />built-in node types
         ul
           li delay (echos)
-          //li filter (low/pass/high frequencies)
+          li filter (low/pass/high frequencies)
           li panning (3D sounds!)
           li convolver (reverberation)
           li splitter &amp; merger (channel manipulation)
@@ -744,7 +747,7 @@ html
           li composable
           
       section
-        h2.bullet Our wish:
+        h2.bullet Our wish
         ul
           li People use these bits and pieces
           li Or they look at them and build their own and we can use theirs
