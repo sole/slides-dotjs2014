@@ -2,7 +2,8 @@
   "name": "presentation-tools-for-the-21st-century-musician",
   "version": "0.0.0",
   "dependencies": {
-    "bespoke-theme-nebula": "^1.0.1"
+    "bespoke-theme-nebula": "^1.0.1",
+    "presentation-fullscreen": "^1.0.0"
   },
   "devDependencies": {
     "bespoke": "^1.0.0",
