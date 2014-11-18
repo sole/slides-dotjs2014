@@ -1,6 +1,10 @@
 # Tools for the 21st Century Musician
 > A talk for dotJS 2014, 17 November, Paris
 
+## View slides online
+
+[Slides](http://soledadpenades.com/files/t/20141117_dotjs/)
+
 ## View slides locally
 
 First, ensure you have the following installed:
